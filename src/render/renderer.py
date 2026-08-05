@@ -1,12 +1,20 @@
 from render.eye import Eye
+from config.settings import BACKGROUND_COLOR, WINDOW_WIDTH, WINDOW_HEIGHT, EYE_WIDTH, EYE_HEIGHT, EYE_SPACING
 
 class Renderer:
 
     def __init__(self):
-        self.left_eye = Eye(x = 250, y = 220, width = 80, height = 120)
-        self.right_eye = Eye(x = 470, y = 220, width = 80, height = 120)
+        center_x = WINDOW_WIDTH // 2
+        center_y = WINDOW_HEIGHT // 2
+
+        left_eye_x = center_x - EYE_SPACING - EYE_WIDTH // 2
+        right_eye_x = center_x + EYE_SPACING - EYE_WIDTH // 2
+        eye_y = center_y - EYE_HEIGHT // 2
+        
+        self.left_eye = Eye(x=left_eye_x, y=eye_y, width=EYE_WIDTH, height=EYE_HEIGHT)
+        self.right_eye = Eye(x=right_eye_x, y=eye_y, width=EYE_WIDTH, height=EYE_HEIGHT)
 
     def draw(self, surface):
-        surface.fill((0, 0, 0)) #Clean the surface.
+        surface.fill(BACKGROUND_COLOR) #Clean the surface.
         self.left_eye.draw(surface)
         self.right_eye.draw(surface)

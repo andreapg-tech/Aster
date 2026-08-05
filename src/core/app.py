@@ -1,12 +1,13 @@
 import pygame
 from ui.window import Window
 from render.renderer import Renderer
+from config.settings import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 
 class AsterApp:
 
     def __init__(self):
         self.running = True
-        self.window = Window(800, 600, "Aster")
+        self.window = Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
         self.renderer = Renderer()
 
     def run(self):

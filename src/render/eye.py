@@ -1,4 +1,5 @@
 import pygame
+from config.settings import EYE_COLOR
 
 class Eye:
     """Draw all the visual elements."""
@@ -10,4 +11,4 @@ class Eye:
         self.heigh = height
 
     def draw(self, surface):
-        pygame.draw.ellipse(surface, (255, 255, 255), (self.x, self.y, self.width, self.heigh))
+        pygame.draw.ellipse(surface, EYE_COLOR, (self.x, self.y, self.width, self.heigh))
