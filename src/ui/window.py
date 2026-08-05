@@ -16,7 +16,7 @@ class Window:
         pygame.display.set_caption(self.title)
 
     def update(self):
-        pass
+        pygame.display.flip()
 
     def close(self):
         pygame.quit()
