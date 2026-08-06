@@ -1,3 +1,4 @@
+import random
 from render.eye import Eye
 from config.settings import BACKGROUND_COLOR, WINDOW_WIDTH, WINDOW_HEIGHT, EYE_WIDTH, EYE_HEIGHT, EYE_SPACING
 
@@ -14,8 +15,9 @@ class Renderer:
         self.left_eye = Eye(x=left_eye_x, y=eye_y, width=EYE_WIDTH, height=EYE_HEIGHT)
         self.right_eye = Eye(x=right_eye_x, y=eye_y, width=EYE_WIDTH, height=EYE_HEIGHT)
 
-        self.left_eye.blink()
-        self.right_eye.blink()
+        self.blink_timer = 0.0
+        self.next_blink = random.uniform(2.5, 5.0)
+
     def draw(self, surface):
         surface.fill(BACKGROUND_COLOR) #Clean the surface.
         self.left_eye.draw(surface)
@@ -24,3 +26,12 @@ class Renderer:
     def update(self, dt):
         self.left_eye.update(dt)
         self.right_eye.update(dt)
+
+        self.blink_timer += dt
+
+        if self.blink_timer >= self.next_blink:
+            self.left_eye.blink()
+            self.right_eye.blink()
+
+            self.blink_timer = 0.0
+            self.next_blink = random.uniform(2.5, 5.0)

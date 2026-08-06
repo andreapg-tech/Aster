@@ -1,4 +1,5 @@
 import pygame
+import random
 from config.settings import EYE_COLOR, EYE_BLINK_SPEED
 from states.eye_state import EyeState
 
