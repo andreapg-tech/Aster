@@ -7,6 +7,7 @@ class Window:
         self.height = height
         self.title = title
         self.screen = None #Store the rendering surface so other components can draw on it.
+        self.clock = pygame.time.Clock()
 
     def create(self):
         """Initialize Pygame and create the application window."""
@@ -17,6 +18,8 @@ class Window:
 
     def update(self):
         pygame.display.flip()
+        dt = self.clock.tick(60) / 1000
+        return dt
 
     def close(self):
         pygame.quit()

@@ -13,11 +13,13 @@ class AsterApp:
     def run(self):
         self.window.create()
 
+        dt = 0.0
+
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                     self.window.close()
-
+            self.renderer.update(dt)
             self.renderer.draw(self.window.screen)
-            self.window.update()
+            dt = self.window.update()

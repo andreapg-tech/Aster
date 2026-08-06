@@ -14,7 +14,13 @@ class Renderer:
         self.left_eye = Eye(x=left_eye_x, y=eye_y, width=EYE_WIDTH, height=EYE_HEIGHT)
         self.right_eye = Eye(x=right_eye_x, y=eye_y, width=EYE_WIDTH, height=EYE_HEIGHT)
 
+        self.left_eye.blink()
+        self.right_eye.blink()
     def draw(self, surface):
         surface.fill(BACKGROUND_COLOR) #Clean the surface.
         self.left_eye.draw(surface)
         self.right_eye.draw(surface)
+
+    def update(self, dt):
+        self.left_eye.update(dt)
+        self.right_eye.update(dt)
