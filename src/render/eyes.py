@@ -1,6 +1,6 @@
 import random
 from render.eye import Eye
-from config.settings import BACKGROUND_COLOR, WINDOW_WIDTH, WINDOW_HEIGHT, EYE_WIDTH, EYE_HEIGHT, EYE_SPACING
+from config.settings import WINDOW_WIDTH, WINDOW_HEIGHT, EYE_WIDTH, EYE_HEIGHT, EYE_SPACING, EYE_LOOK_SPEED
 
 class Eyes:
 
@@ -18,6 +18,11 @@ class Eyes:
         self.blink_timer = 0.0
         self.next_blink = random.uniform(2.5, 5.0)
 
+        self.left_eye_x = left_eye_x
+        self.right_eye_x = right_eye_x
+        self.look_offset_x = 0.0 #Current position
+        self.target_look_offset_x = 0.0 #Position we want to reach
+
     def update(self, dt):
         self.left_eye.update(dt)
         self.right_eye.update(dt)
@@ -32,6 +37,25 @@ class Eyes:
             self.blink_timer = 0.0
             self.next_blink = random.uniform(2.5, 5.0)
 
+
+        if self.look_offset_x < self.target_look_offset_x:
+            self.look_offset_x += EYE_LOOK_SPEED * dt
+
+        elif self.look_offset_x > self.target_look_offset_x:
+            self.look_offset_x -= EYE_LOOK_SPEED * dt
+
+        if abs(self.target_look_offset_x - self.look_offset_x) < 1:
+            self.look_offset_x = self.target_look_offset_x
+
+        self.left_eye.x = self.left_eye_x + self.look_offset_x
+        self.right_eye.x = self.right_eye_x + self.look_offset_x
+
     def draw(self, surface):
         self.left_eye.draw(surface)
         self.right_eye.draw(surface)
+
+    def look(self, offset_x):
+        self.target_look_offset_x = offset_x
+
+        self.left_eye.x = self.left_eye_x + self.look_offset_x
+        self.right_eye.x = self.right_eye_x + self.look_offset_x
