@@ -13,6 +13,7 @@ class Eye:
         self.height = height
         self.openness = 1.0
         self.state = EyeState.IDLE
+        self.blink_speed = 0.0
 
     def draw(self, surface):
         current_height = int(self.height * self.openness)
@@ -24,13 +25,13 @@ class Eye:
 
     def update(self, dt):
         if self.state == EyeState.CLOSING:
-            self.openness -= EYE_BLINK_SPEED * dt
+            self.openness -= self.blink_speed * dt
             if self.openness <= 0.0:
                 self.openness = 0.0
                 self.state = EyeState.OPENING
 
         elif self.state == EyeState.OPENING:
-            self.openness += EYE_BLINK_SPEED * dt
+            self.openness += self.blink_speed * dt
             if self.openness >= 1.0:
                 self.openness = 1.0
                 self.state = EyeState.IDLE
@@ -38,6 +39,7 @@ class Eye:
         elif self.state == EyeState.IDLE:
             pass
 
-    def blink(self):
+    def blink(self, speed):
         if self.state == EyeState.IDLE:
             self.state = EyeState.CLOSING
+            self.blink_speed = speed
