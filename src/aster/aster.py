@@ -2,6 +2,7 @@ import random
 from render.eyes import Eyes
 from states.aster_state import AsterState
 from config.settings import WAKE_UP_DURATION
+from events.aster_events import AsterEvent
 
 class Aster:
 
@@ -51,3 +52,7 @@ class Aster:
             self.state = AsterState.WAKE_UP
             self.wake_up_timer = 0.0
             self.eyes.wake_up()
+
+    def handle_event(self, event):
+        if event == AsterEvent.WAKE_UP:
+            self.wake_up()

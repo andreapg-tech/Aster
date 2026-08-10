@@ -2,6 +2,7 @@ import pygame
 from ui.window import Window
 from render.renderer import Renderer
 from config.settings import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
+from events.aster_events import AsterEvent
 
 class AsterApp:
 
@@ -22,7 +23,7 @@ class AsterApp:
                     self.window.close()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        self.renderer.wake_up()
+                        self.renderer.handle_event(AsterEvent.WAKE_UP)
             self.renderer.update(dt)
             self.renderer.draw(self.window.screen)
             dt = self.window.update()

@@ -15,3 +15,6 @@ class Renderer:
 
     def wake_up(self):
         self.aster.wake_up()
+
+    def handle_event(self, event):
+        self.aster.handle_event(event)
