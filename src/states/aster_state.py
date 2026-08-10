@@ -1,4 +1,7 @@
 from enum import Enum
 
 class AsterState(Enum):
-    IDLE = 1
+    SLEEPING = 1
+    WAKE_UP = 2
+    IDLE = 3
+    

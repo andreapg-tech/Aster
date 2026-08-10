@@ -12,3 +12,6 @@ class Renderer:
     def draw(self, surface):
         surface.fill(BACKGROUND_COLOR)
         self.aster.draw(surface)
+
+    def wake_up(self):
+        self.aster.wake_up()

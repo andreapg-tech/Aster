@@ -1,5 +1,6 @@
 import random
 from render.eye import Eye
+from states.eye_state import EyeState
 from config.settings import WINDOW_WIDTH, WINDOW_HEIGHT, EYE_WIDTH, EYE_HEIGHT, EYE_SPACING, EYE_LOOK_SPEED
 
 class Eyes:
@@ -56,3 +57,14 @@ class Eyes:
 
     def look(self, offset_x):
         self.target_look_offset_x = offset_x
+
+    def wake_up(self):
+        self.left_eye.open(5.0)
+        self.right_eye.open(5.0)
+
+    def sleep(self):
+        self.left_eye.openness = 0.0
+        self.right_eye.openness = 0.0
+
+        self.left_eye.state = EyeState.IDLE
+        self.right_eye.state = EyeState.IDLE
