@@ -49,13 +49,10 @@ class Eyes:
 
         self.left_eye.x = self.left_eye_x + self.look_offset_x
         self.right_eye.x = self.right_eye_x + self.look_offset_x
-
+        
     def draw(self, surface):
         self.left_eye.draw(surface)
         self.right_eye.draw(surface)
 
     def look(self, offset_x):
         self.target_look_offset_x = offset_x
-
-        self.left_eye.x = self.left_eye_x + self.look_offset_x
-        self.right_eye.x = self.right_eye_x + self.look_offset_x

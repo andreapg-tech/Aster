@@ -1,14 +1,14 @@
-from render.eyes import Eyes
+from aster.aster import Aster
 from config.settings import BACKGROUND_COLOR
 
 class Renderer:
 
     def __init__(self):
-        self.eyes = Eyes()
-
-    def draw(self, surface):
-        surface.fill(BACKGROUND_COLOR) #Clean the surface.
-        self.eyes.draw(surface)
+        self.aster = Aster()
 
     def update(self, dt):
-        self.eyes.update(dt)
+        self.aster.update(dt)
+
+    def draw(self, surface):
+        surface.fill(BACKGROUND_COLOR)
+        self.aster.draw(surface)
