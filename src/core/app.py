@@ -3,6 +3,7 @@ from ui.window import Window
 from render.renderer import Renderer
 from config.settings import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 from events.aster_events import AsterEvent
+from input.voice_input import VoiceInput
 
 class AsterApp:
 
@@ -10,9 +11,17 @@ class AsterApp:
         self.running = True
         self.window = Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
         self.renderer = Renderer()
+        self.voice_input = VoiceInput()
 
     def run(self):
         self.window.create()
+
+        print("Di 'Hola Aster'...")
+        text = self.voice_input.listen()
+        print("Has dicho:", text)
+
+        if self.voice_input.contains_wake_word(text):
+            self.renderer.handle_event(AsterEvent.WAKE_UP)
 
         dt = 0.0
 
