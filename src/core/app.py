@@ -26,6 +26,8 @@ class AsterApp:
     def run(self):
         self.window.create()
 
+        self.voice_input.calibrate_noise()
+
         self.voice_listener.start()
 
         dt = 0.0
