@@ -6,6 +6,8 @@ from events.aster_events import AsterEvent
 from input.voice_input import VoiceInput
 from input.voice_listener import VoiceListener
 from queue import Queue
+from processing.language_processor import LanguageProcessor
+from actions.action_handler import ActionHandler
 
 class AsterApp:
 
@@ -22,6 +24,8 @@ class AsterApp:
             self.voice_input,
             self.event_queue
             )
+        self.language_processor = LanguageProcessor()
+        self.action_handler = ActionHandler()
 
     def run(self):
         self.window.create()
@@ -51,5 +55,12 @@ class AsterApp:
         while not self.event_queue.empty():
             event = self.event_queue.get()
 
-            if event == "WAKE_UP":
+            if event["type"] == "WAKE_UP":
                 self.renderer.handle_event(AsterEvent.WAKE_UP)
+                text = event["text"]
+
+                intent = self.language_processor.process(text)
+                print("Intent:", intent.name)
+
+                result = self.action_handler.execute(intent)
+                print("Resultado:", result)

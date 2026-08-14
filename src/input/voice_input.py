@@ -13,7 +13,7 @@ class VoiceInput:
         self.sample_rate = 44100
 
         self.model = WhisperModel(
-            "base",
+            "small",
             device="cpu",
             compute_type="int8"
         )
@@ -139,7 +139,7 @@ class VoiceInput:
 
         noise_level = np.sqrt(np.mean(audio ** 2))
 
-        self.voice_threshold = noise_level * 2.5
+        self.voice_threshold = max(noise_level * 2.5, 0.003)
 
         print(f"Nivel de ruido: {noise_level:.4f}")
         print(f"Umbral de voz: {self.voice_threshold:.4f}")

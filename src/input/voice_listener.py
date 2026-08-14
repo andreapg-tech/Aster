@@ -1,6 +1,5 @@
 import threading
 
-
 class VoiceListener:
 
     def __init__(self, voice_input, event_queue):
@@ -25,7 +24,10 @@ class VoiceListener:
 
             if self.voice_input.contains_wake_word(text):
                 print("¡Wake word detectada!")
-                self.event_queue.put("WAKE_UP")
+                self.event_queue.put({
+                    "type": "WAKE_UP",
+                    "text": text
+                })
 
     def stop(self):
         self.running = False
