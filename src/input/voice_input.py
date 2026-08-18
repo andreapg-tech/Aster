@@ -20,7 +20,7 @@ class VoiceInput:
 
         self.voice_threshold = 0.01
 
-    def listen(self, max_duration=15, silence_duration=1.5):
+    def listen(self, max_duration=15, silence_duration=0.7):
         print("Escuchando...")
 
         chunk_duration = 0.1

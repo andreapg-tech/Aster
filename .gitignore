@@ -1,16 +1,19 @@
-# Entorno virtual
+#Virtual environment
 .venv/
 
-# Caché de Python
+#Python cache
 __pycache__/
 *.py[cod]
 
-# Configuración de VS Code
+#VS Code configuration
 .vscode/
 
-# Variables de entorno
+#Environment variables
 .env
 
-# Archivos del sistema
+#System files
 .DS_Store
 Thumbs.db
+
+#Downloaded AI models
+models/

@@ -21,6 +21,12 @@ class ActionHandler:
         if intent.name == "get_weather":
             return self.get_weather(intent.parameters)
 
+        if intent.name == "conversation":
+            return intent.parameters.get("response")
+
+        if intent.name == "unknown":
+            return "Todavía no sé hacer eso."
+
         return None
 
     def get_current_time(self):
