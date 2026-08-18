@@ -18,3 +18,6 @@ class Renderer:
 
     def handle_event(self, event):
         self.aster.handle_event(event)
+
+    def get_state(self):
+        return self.aster.state

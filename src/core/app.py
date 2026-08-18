@@ -11,6 +11,7 @@ from queue import Queue
 from processing.language_processor import LanguageProcessor
 from actions.action_handler import ActionHandler
 from services.speech_service import SpeechService
+from states.aster_state import AsterState
 
 class AsterApp:
 
@@ -36,6 +37,8 @@ class AsterApp:
 
         self.continue_conversation = False
 
+        self.pending_text = None
+
     def run(self):
         self.window.create()
 
@@ -51,11 +54,11 @@ class AsterApp:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                    self.window.close()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         self.renderer.handle_event(AsterEvent.WAKE_UP)
             self.process_voice_events()
+            self.update_wake_up()
             self.update_conversation_timer(dt)
 
             self.renderer.update(dt)
@@ -63,6 +66,8 @@ class AsterApp:
             dt = self.window.update()
 
         self.voice_listener.stop()
+        self.window.close()
+
 
     def process_voice_events(self):
         while not self.event_queue.empty():
@@ -72,9 +77,8 @@ class AsterApp:
                 self.voice_listener.pause()
 
                 self.renderer.handle_event(AsterEvent.WAKE_UP)
-                text = event["text"]
 
-                self.process_text(text)
+                self.pending_text = event["text"]
 
             elif event["type"] == "CONVERSATION_INPUT":
                 self.voice_listener.pause()
@@ -91,11 +95,16 @@ class AsterApp:
 
         if self.continue_conversation:
             self.voice_listener.start_conversation()
+            self.renderer.handle_event(AsterEvent.START_LISTENING)
+        else:
+            self.renderer.handle_event(AsterEvent.FINISH_SPEAKING)
 
         self.voice_listener.resume()
 
     def process_text(self, text):
         was_conversing = self.voice_listener.conversation_mode
+
+        self.renderer.handle_event(AsterEvent.START_PROCESSING)
 
         intent = self.language_processor.process(text)
         print("Intent:", intent.name)
@@ -106,6 +115,9 @@ class AsterApp:
         if result:
             self.continue_conversation = (intent.name == "conversation" or was_conversing)
             self.conversation_timer = 0.0
+
+            self.renderer.handle_event(AsterEvent.START_SPEAKING)
+
             self.speech_service.speak(result)
         
             threading.Thread(
@@ -115,6 +127,7 @@ class AsterApp:
 
         else:
             self.voice_listener.resume()
+            self.renderer.handle_event(AsterEvent.START_LISTENING)
 
     def update_conversation_timer(self, dt):
         if not self.voice_listener.conversation_mode:
@@ -130,3 +143,15 @@ class AsterApp:
             self.language_processor.clear_conversation()
             self.conversation_timer = 0.0
             self.continue_conversation = False
+
+    def update_wake_up(self):
+        if self.pending_text is None:
+            return
+
+        if self.renderer.get_state() == AsterState.WAKE_UP:
+            return
+
+        text = self.pending_text
+        self.pending_text = None
+
+        self.process_text(text)

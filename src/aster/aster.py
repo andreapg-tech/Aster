@@ -1,4 +1,3 @@
-import random
 from render.eyes import Eyes
 from states.aster_state import AsterState
 from config.settings import WAKE_UP_DURATION
@@ -10,10 +9,6 @@ class Aster:
         self.state = AsterState.SLEEPING
         self.eyes = Eyes()
         self.eyes.sleep()
-
-        self.look_timer = 0.0
-        self.next_look = random.uniform(3.0, 6.0)
-        self.current_look = 0
 
         self.wake_up_timer = 0.0
 
@@ -27,22 +22,10 @@ class Aster:
 
             if self.wake_up_timer >= WAKE_UP_DURATION:
                 self.state = AsterState.IDLE
+                self.eyes.set_state(self.state)
 
-        elif self.state == AsterState.IDLE:
+        else:
             self.eyes.update(dt)
-            self.look_timer += dt
-
-            if self.look_timer >= self.next_look:
-                possible_looks = [-40, 0, 40]
-                possible_looks.remove(self.current_look)
-
-                look_offset = random.choice([-40, 0, 40])
-
-                self.eyes.look(look_offset)
-                self.current_look = look_offset
-
-                self.look_timer = 0.0
-                self.next_look = random.uniform(3.0, 6.0)
 
     def draw(self, surface):
         self.eyes.draw(surface)
@@ -51,8 +34,27 @@ class Aster:
         if self.state == AsterState.SLEEPING:
             self.state = AsterState.WAKE_UP
             self.wake_up_timer = 0.0
+
+            self.eyes.set_state(self.state)
             self.eyes.wake_up()
 
     def handle_event(self, event):
         if event == AsterEvent.WAKE_UP:
             self.wake_up()
+
+        elif event == AsterEvent.START_LISTENING:
+            self.state = AsterState.LISTENING
+            self.eyes.set_state(self.state)
+
+        elif event == AsterEvent.START_PROCESSING:
+            self.state = AsterState.PROCESSING
+            self.eyes.set_state(self.state)
+
+        elif event == AsterEvent.START_SPEAKING:
+            self.state = AsterState.SPEAKING
+            self.eyes.set_state(self.state)
+
+        elif event == AsterEvent.FINISH_SPEAKING:
+            self.state = AsterState.IDLE
+            self.eyes.set_state(self.state)
+            self.eyes.reset_look()
