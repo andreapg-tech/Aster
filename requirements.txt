@@ -1,0 +1,9 @@
+pygame-ce==2.5.7
+numpy==2.5.2
+sounddevice==0.5.5
+SpeechRecognition==3.17.0
+faster-whisper==1.2.1
+piper-tts==1.6.1
+ollama==0.6.2
+requests==2.34.2
+scipy==1.18.0
