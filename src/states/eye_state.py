@@ -4,3 +4,4 @@ class EyeState(Enum):
     IDLE = "idle"
     CLOSING = "closing"
     OPENING = "opening"
+    SLEEPING = "sleeping"

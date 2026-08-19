@@ -36,30 +36,30 @@ class Eyes:
         self.left_eye.update(dt)
         self.right_eye.update(dt)
 
-        self.blink_timer += dt
+        if self.aster_state != AsterState.SLEEPING:
+            self.blink_timer += dt
+            if self.blink_timer >= self.next_blink:
+                blink_speed = random.uniform(2.5, 4.0)
 
-        if self.blink_timer >= self.next_blink:
-            blink_speed = random.uniform(2.5, 4.0)
+                self.left_eye.blink(blink_speed)
+                self.right_eye.blink(blink_speed)
 
-            self.left_eye.blink(blink_speed)
-            self.right_eye.blink(blink_speed)
+                self.blink_timer = 0.0
+                self.next_blink = random.uniform(2.5, 5.0)
 
-            self.blink_timer = 0.0
-            self.next_blink = random.uniform(2.5, 5.0)
+            if self.aster_state == AsterState.IDLE:
+                self._update_idle_look(dt)
 
-        if self.aster_state == AsterState.IDLE:
-            self._update_idle_look(dt)
+            elif self.aster_state == AsterState.LISTENING:
+                self._update_listening_look(dt)
 
-        elif self.aster_state == AsterState.LISTENING:
-            self._update_listening_look(dt)
+            elif self.aster_state == AsterState.PROCESSING:
+                self._update_processing_look(dt)
 
-        elif self.aster_state == AsterState.PROCESSING:
-            self._update_processing_look(dt)
+            elif self.aster_state == AsterState.SPEAKING:
+                self._update_speaking_look(dt)
 
-        elif self.aster_state == AsterState.SPEAKING:
-            self._update_speaking_look(dt)
-
-        self._update_eye_positions(dt)
+            self._update_eye_positions(dt)
         
     def draw(self, surface):
         self.left_eye.draw(surface)
@@ -79,11 +79,10 @@ class Eyes:
         self.right_eye.open(5.0)
 
     def sleep(self):
-        self.left_eye.openness = 0.0
-        self.right_eye.openness = 0.0
+        sleep_speed = 2.0
 
-        self.left_eye.state = EyeState.IDLE
-        self.right_eye.state = EyeState.IDLE
+        self.left_eye.sleep(sleep_speed)
+        self.right_eye.sleep(sleep_speed)
 
     def start_listening(self):
         self.look_timer = 0.0
@@ -189,3 +188,9 @@ class Eyes:
         self.aster_state = state
         self.look_timer = 0.0
         self.current_look = 0
+
+    def is_closed(self):
+        return (
+            self.left_eye.is_closed()
+            and self.right_eye.is_closed()
+        )

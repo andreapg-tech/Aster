@@ -6,3 +6,4 @@ class AsterEvent(Enum):
     START_PROCESSING = 3
     START_SPEAKING = 4
     FINISH_SPEAKING = 5
+    SLEEP = 6

@@ -14,6 +14,7 @@ class Aster:
 
     def update(self, dt):
         if self.state == AsterState.SLEEPING:
+            self.eyes.update(dt)
             return
 
         if self.state == AsterState.WAKE_UP:
@@ -62,3 +63,8 @@ class Aster:
             self.state = AsterState.IDLE
             self.eyes.set_state(self.state)
             self.eyes.reset_look()
+
+        elif event == AsterEvent.SLEEP:
+            self.state = AsterState.SLEEPING
+            self.eyes.set_state(self.state)
+            self.eyes.sleep()

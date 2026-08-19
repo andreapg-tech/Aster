@@ -39,6 +39,9 @@ class AsterApp:
 
         self.pending_text = None
 
+        self.sleep_delay = 3.0
+        self.sleep_timer = 0.0
+
     def run(self):
         self.window.create()
 
@@ -57,6 +60,7 @@ class AsterApp:
                 
             self.process_voice_events()
             self.update_wake_up()
+            self.update_sleep_timer(dt)
             self.update_conversation_timer(dt)
 
             self.renderer.update(dt)
@@ -154,3 +158,18 @@ class AsterApp:
         self.pending_text = None
 
         self.process_text(text)
+
+    def update_sleep_timer(self, dt):
+        if self.renderer.get_state() != AsterState.IDLE:
+            self.sleep_timer = 0.0
+            return
+
+        if self.voice_listener.conversation_mode:
+            self.sleep_timer = 0.0
+            return
+
+        self.sleep_timer += dt
+
+        if self.sleep_timer >= self.sleep_delay:
+            self.sleep_timer = 0.0
+            self.renderer.handle_event(AsterEvent.SLEEP)
