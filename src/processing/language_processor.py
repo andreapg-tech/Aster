@@ -51,6 +51,9 @@ class LanguageProcessor:
 
                 IMPORTANTE:
 
+                Cuando el usuario salude debes iniciar una conversación.
+                Por ejemplo, "Aster", "Hola Aster", "Buenos días Aster..."
+
                 Cuando el usuario diga que le da igual, que elija Aster,
                 que haga lo que quiera, que le sorprenda o cualquier
                 expresión equivalente, Aster DEBE elegir un tema y
@@ -173,13 +176,18 @@ class LanguageProcessor:
             data = json.loads(content)
 
             intent_name = data["intent"]
+            parameters = data.get("parameters", {})
 
-            if intent_name not in INTENTS and intent_name != "conversation":
+
+            if intent_name not in INTENTS:
                 return Intent("unknown")
+
+            if not isinstance(parameters, dict):
+                parameters = {}
 
             return Intent(
                 intent_name,
-                data.get("parameters", {})
+                parameters
             )
 
         except (json.JSONDecodeError, KeyError):

@@ -25,7 +25,7 @@ class Eyes:
         self.look_offset_x = 0.0 #Current position
         self.target_look_offset_x = 0.0 #Position we want to reach
 
-        self.current_look = 0.0
+        self.current_look = 0
 
         self.look_timer = 0.0
         self.next_look = random.uniform(3.0, 6.0)
@@ -89,18 +89,19 @@ class Eyes:
         self.look_timer = 0.0
         self.next_look = 1.0
         self.look(-20)
-
+        self.current_look = -20
 
     def start_processing(self):
         self.look_timer = 0.0
         self.next_look = 0.7
         self.look(30)
-
+        self.current_look = 30
 
     def start_speaking(self):
         self.look_timer = 0.0
         self.next_look = 1.0
         self.look(0)
+        self.current_look = 0
 
     def reset_look(self):
         self.look(0)
@@ -128,7 +129,9 @@ class Eyes:
 
         if self.look_timer >= self.next_look:
             possible_looks = [-20, 0, 20]
-            possible_looks.remove(self.current_look)
+
+            if self.current_look in possible_looks:
+                possible_looks.remove(self.current_look)
 
             look_offset = random.choice(possible_looks)
 
@@ -185,4 +188,4 @@ class Eyes:
     def set_state(self, state):
         self.aster_state = state
         self.look_timer = 0.0
-        self.current_look = 0.0
+        self.current_look = 0

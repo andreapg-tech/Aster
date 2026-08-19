@@ -40,6 +40,10 @@ class ActionHandler:
     def get_weather(self, parameters):
 
         days_from_now = parameters.get("days_from_now", 0)
+
+        if days_from_now == "today":
+            days_from_now = 0
+
         location = parameters.get("location")
         information = parameters.get("information", "general")
 

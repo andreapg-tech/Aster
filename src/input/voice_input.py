@@ -42,7 +42,7 @@ class VoiceInput:
             channels=1,
             dtype="float32",
             blocksize=chunk_size
-        )as stream:
+        ) as stream:
             while elapsed_time < max_duration:
                 audio, _ = stream.read(chunk_size)
                 audio = audio.copy()
@@ -95,24 +95,26 @@ class VoiceInput:
             audio_int16
         )
 
-        segments, _ = self.model.transcribe(
-            temp_file.name,
-            language="es",
-            initial_prompt="Hola Aster.",
-            vad_filter=True,
-            vad_parameters=dict(
-                min_silence_duration_ms=1000
+        try:
+            segments, _ = self.model.transcribe(
+                temp_file.name,
+                language="es",
+                initial_prompt="Hola Aster.",
+                vad_filter=True,
+                vad_parameters=dict(
+                    min_silence_duration_ms=1000
+                )
             )
-        )
 
-        text = " ".join(
-            segment.text.strip()
-            for segment in segments
-        )
+            text = " ".join(
+                segment.text.strip()
+                for segment in segments
+            )
 
-        print(f"Texto detectado: '{text}'")
+            print(f"Texto detectado: '{text}'")
 
-        os.remove(temp_file.name)
+        finally:
+            os.remove(temp_file.name)
 
         return text
 

@@ -53,5 +53,6 @@ class Eye:
             self.animation_speed = speed
 
     def open(self, speed):
-        self.animation_speed = speed
-        self.state = EyeState.OPENING
+        if self.openness < 1.0:
+            self.animation_speed = speed
+            self.state = EyeState.OPENING

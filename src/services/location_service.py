@@ -25,7 +25,7 @@ class LocationService:
 
         data = response.json()
 
-        if "results" not in data:
+        if not data.get("results"):
             return None
 
         result = data["results"][0]

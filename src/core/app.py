@@ -54,9 +54,7 @@ class AsterApp:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        self.renderer.handle_event(AsterEvent.WAKE_UP)
+                
             self.process_voice_events()
             self.update_wake_up()
             self.update_conversation_timer(dt)
@@ -143,6 +141,7 @@ class AsterApp:
             self.language_processor.clear_conversation()
             self.conversation_timer = 0.0
             self.continue_conversation = False
+            self.renderer.handle_event(AsterEvent.FINISH_SPEAKING)
 
     def update_wake_up(self):
         if self.pending_text is None:

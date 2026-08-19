@@ -22,4 +22,5 @@ class Window:
         return dt
 
     def close(self):
-        pygame.quit()
+        if pygame.get_init():
+            pygame.quit()

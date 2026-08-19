@@ -33,6 +33,9 @@ class VoiceListener:
 
             text = self.voice_input.listen()
 
+            if not text:
+                continue
+
             if self.conversation_mode:
                 self.listening = False
                 

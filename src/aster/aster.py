@@ -14,9 +14,9 @@ class Aster:
 
     def update(self, dt):
         if self.state == AsterState.SLEEPING:
-            pass
+            return
 
-        elif self.state == AsterState.WAKE_UP:
+        if self.state == AsterState.WAKE_UP:
             self.eyes.update(dt)
             self.wake_up_timer += dt
 
@@ -24,8 +24,9 @@ class Aster:
                 self.state = AsterState.IDLE
                 self.eyes.set_state(self.state)
 
-        else:
-            self.eyes.update(dt)
+            return
+
+        self.eyes.update(dt)
 
     def draw(self, surface):
         self.eyes.draw(surface)
@@ -45,14 +46,17 @@ class Aster:
         elif event == AsterEvent.START_LISTENING:
             self.state = AsterState.LISTENING
             self.eyes.set_state(self.state)
+            self.eyes.start_listening()
 
         elif event == AsterEvent.START_PROCESSING:
             self.state = AsterState.PROCESSING
             self.eyes.set_state(self.state)
+            self.eyes.start_processing()
 
         elif event == AsterEvent.START_SPEAKING:
             self.state = AsterState.SPEAKING
             self.eyes.set_state(self.state)
+            self.eyes.start_speaking()
 
         elif event == AsterEvent.FINISH_SPEAKING:
             self.state = AsterState.IDLE

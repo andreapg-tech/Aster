@@ -1,7 +1,6 @@
 import pygame
 import threading
 import io
-import time
 import wave
 from pathlib import Path
 from piper import PiperVoice
@@ -47,6 +46,9 @@ class SpeechService:
 
             while pygame.mixer.music.get_busy():
                 pygame.time.Clock().tick(10)
+
+        except pygame.error as e:
+            print(f"Error reproduciendo audio: {e}")
 
         finally:
             self.speaking = False

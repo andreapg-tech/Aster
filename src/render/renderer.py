@@ -13,9 +13,6 @@ class Renderer:
         surface.fill(BACKGROUND_COLOR)
         self.aster.draw(surface)
 
-    def wake_up(self):
-        self.aster.wake_up()
-
     def handle_event(self, event):
         self.aster.handle_event(event)
 
