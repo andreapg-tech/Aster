@@ -233,18 +233,6 @@ class LanguageProcessor:
 
         content = response["message"]["content"]
 
-        #Save the user's message
-        self.conversation_history.append({
-            "role": "user",
-            "content": text
-        })
-
-        #Save Aster's response
-        self.conversation_history.append({
-            "role": "assistant",
-            "content": content
-        })
-
         try:
             data = json.loads(content)
 
@@ -268,3 +256,9 @@ class LanguageProcessor:
 
     def clear_conversation(self):
         self.conversation_history.clear()
+
+    def add_to_history(self, role, content):
+        self.conversation_history.append({
+            "role": role,
+            "content": content
+        })

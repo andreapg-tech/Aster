@@ -31,11 +31,36 @@ class ActionHandler:
 
     def get_current_time(self):
         now = datetime.now()
-        return now.strftime("%H:%M")
+        hour = now.hour
+        minute = now.minute
+
+        # Ajuste gramatical para la una en punto
+        if hour == 1 or hour == 13:
+            hour_str = "la una"
+            verb = "Es"
+        else:
+            hour_str = f"las {hour}"
+            verb = "Son"
+
+        if minute == 0:
+            return f"{verb} {hour_str} en punto."
+        elif minute == 30:
+            return f"{verb} {hour_str} y media."
+        elif minute == 15:
+            return f"{verb} {hour_str} y cuarto."
+        else:
+            return f"{verb} {hour_str} y {minute}."
 
     def get_current_date(self):
         now = datetime.now()
-        return now.strftime("%d/%m/%Y")
+        months = [
+            "enero", "febrero", "marzo", "abril", "mayo", "junio",
+            "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+        ]
+        day = now.day
+        month = months[now.month - 1]
+        year = now.year
+        return f"Hoy es {day} de {month} de {year}."
 
     def get_weather(self, parameters):
 
@@ -66,6 +91,9 @@ class ActionHandler:
             longitude,
             days_from_now
         )
+
+        if data is None:
+            return "Lo siento, no he podido obtener la información del tiempo en este momento."
 
         if information == "temperature":
             return (

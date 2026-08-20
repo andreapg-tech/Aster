@@ -1,16 +1,12 @@
-import os
-import tempfile
-
 import numpy as np
 import sounddevice as sd
-from scipy.io.wavfile import write
 from faster_whisper import WhisperModel
 
 
 class VoiceInput:
 
     def __init__(self):
-        self.sample_rate = 44100
+        self.sample_rate = 16000
 
         self.model = WhisperModel(
             "small",
@@ -78,26 +74,15 @@ class VoiceInput:
 
         print("Procesando...")
 
+        #Concatenate the audio segments
         audio = np.concatenate(audio_chunks, axis=0)
 
-        audio_int16 = np.int16(audio * 32767)
-
-        temp_file = tempfile.NamedTemporaryFile(
-            suffix=".wav",
-            delete=False
-        )
-
-        temp_file.close()
-
-        write(
-            temp_file.name,
-            self.sample_rate,
-            audio_int16
-        )
+        #Whisper expects a one-dimensional (1D) array. We flatten the input:
+        audio_flat = audio.flatten()
 
         try:
             segments, _ = self.model.transcribe(
-                temp_file.name,
+                audio_flat,
                 language="es",
                 initial_prompt="Hola Aster.",
                 vad_filter=True,
@@ -113,8 +98,9 @@ class VoiceInput:
 
             print(f"Texto detectado: '{text}'")
 
-        finally:
-            os.remove(temp_file.name)
+        except Exception as e:
+            print(f"Error en la transcripción: {e}")
+            text = ""
 
         return text
 

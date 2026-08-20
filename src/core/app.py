@@ -77,59 +77,79 @@ class AsterApp:
 
             if event["type"] == "WAKE_UP":
                 self.voice_listener.pause()
-
                 self.renderer.handle_event(AsterEvent.WAKE_UP)
-
                 self.pending_text = event["text"]
 
             elif event["type"] == "CONVERSATION_INPUT":
                 self.voice_listener.pause()
-
                 self.conversation_timer = 0.0
-
                 text = event["text"]
+                self.process_text(text)   
+
+            elif event["type"] == "PROCESSING_FINISHED":
+                result = event["result"]
+                intent = event["intent"]
+                was_conversing = event["was_conversing"]
+
+                if result:
+                    self.continue_conversation = (intent.name == "conversation" or was_conversing)
+                    self.conversation_timer = 0.0
+                    self.renderer.handle_event(AsterEvent.START_SPEAKING)
+                    self.speech_service.speak(result)
                 
-                self.process_text(text)      
+                    threading.Thread(
+                        target=self.wait_for_speech,
+                        daemon=True
+                    ).start()
+                else:
+                    self.voice_listener.resume()
+                    self.renderer.handle_event(AsterEvent.START_LISTENING)
+
+            elif event["type"] == "SPEECH_FINISHED":
+                if self.continue_conversation:
+                    self.voice_listener.start_conversation()
+                    self.renderer.handle_event(AsterEvent.START_LISTENING)
+                else:
+                    self.renderer.handle_event(AsterEvent.FINISH_SPEAKING)
+                self.voice_listener.resume()   
 
     def wait_for_speech(self):
         while self.speech_service.is_speaking():
             time.sleep(0.1)
 
-        if self.continue_conversation:
-            self.voice_listener.start_conversation()
-            self.renderer.handle_event(AsterEvent.START_LISTENING)
-        else:
-            self.renderer.handle_event(AsterEvent.FINISH_SPEAKING)
-
-        self.voice_listener.resume()
+        self.event_queue.put({
+            "type": "SPEECH_FINISHED"
+        })
 
     def process_text(self, text):
         was_conversing = self.voice_listener.conversation_mode
 
         self.renderer.handle_event(AsterEvent.START_PROCESSING)
 
+        threading.Thread(
+            target=self._bg_process_text,
+            args=(text, was_conversing),
+            daemon=True
+        ).start()
+
+    def _bg_process_text(self, text, was_conversing):
         intent = self.language_processor.process(text)
         print("Intent:", intent.name)
         
         result = self.action_handler.execute(intent)
         print("Resultado:", result)
-        
+
+        #Save history
         if result:
-            self.continue_conversation = (intent.name == "conversation" or was_conversing)
-            self.conversation_timer = 0.0
-
-            self.renderer.handle_event(AsterEvent.START_SPEAKING)
-
-            self.speech_service.speak(result)
+            self.language_processor.add_to_history("user", text)
+            self.language_processor.add_to_history("assistant", result)
         
-            threading.Thread(
-                target=self.wait_for_speech,
-                daemon=True
-            ).start()
-
-        else:
-            self.voice_listener.resume()
-            self.renderer.handle_event(AsterEvent.START_LISTENING)
+        self.event_queue.put({
+            "type": "PROCESSING_FINISHED",
+            "result": result,
+            "intent": intent,
+            "was_conversing": was_conversing
+        })
 
     def update_conversation_timer(self, dt):
         if not self.voice_listener.conversation_mode:
