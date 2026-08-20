@@ -109,7 +109,7 @@ class VoiceInput:
 
     def is_voice(self, audio):
         volume = np.sqrt(np.mean(audio ** 2))
-        print(f"RMS: {volume:.4f} | Umbral: {self.voice_threshold:.4f}")
+        #print(f"RMS: {volume:.4f} | Umbral: {self.voice_threshold:.4f}")
         return volume > self.voice_threshold
 
     def calibrate_noise(self, duration=2):
