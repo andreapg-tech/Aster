@@ -1,6 +1,5 @@
 import random
 from render.eye import Eye
-from states.eye_state import EyeState
 from config.settings import WINDOW_WIDTH, WINDOW_HEIGHT, EYE_WIDTH, EYE_HEIGHT, EYE_SPACING, EYE_LOOK_SPEED
 from states.aster_state import AsterState
 
@@ -28,7 +27,7 @@ class Eyes:
         self.current_look = 0
 
         self.look_timer = 0.0
-        self.next_look = random.uniform(3.0, 6.0)
+        self.next_look = random.uniform(5.0, 10.0)
 
         self.aster_state = AsterState.SLEEPING
 
@@ -106,66 +105,35 @@ class Eyes:
         self.look(0)
         self.current_look = 0
         self.look_timer = 0.0
-        self.next_look = random.uniform(3.0, 6.0)
+        self.next_look = random.uniform(5.0, 10.0)
+
+    def _update_random_look(self, dt, possible_looks, min_time, max_time):
+        self.look_timer += dt
+
+        if self.look_timer >= self.next_look:
+            looks = list(possible_looks)
+            if self.current_look in looks:
+                looks.remove(self.current_look)
+
+            look_offset = random.choice(looks)
+
+            self.look(look_offset)
+            self.current_look = look_offset
+
+            self.look_timer = 0.0
+            self.next_look = random.uniform(min_time, max_time)
 
     def _update_idle_look(self, dt):
-        self.look_timer += dt
-
-        if self.look_timer >= self.next_look:
-            possible_looks = [-40, 0, 40]
-            possible_looks.remove(self.current_look)
-
-            look_offset = random.choice(possible_looks)
-
-            self.look(look_offset)
-            self.current_look = look_offset
-
-            self.look_timer = 0.0
-            self.next_look = random.uniform(3.0, 6.0)
+        self._update_random_look(dt, [-40, 0, 40], 5.0, 10.0)
 
     def _update_listening_look(self, dt):
-        self.look_timer += dt
-
-        if self.look_timer >= self.next_look:
-            possible_looks = [-20, 0, 20]
-
-            if self.current_look in possible_looks:
-                possible_looks.remove(self.current_look)
-
-            look_offset = random.choice(possible_looks)
-
-            self.look(look_offset)
-            self.current_look = look_offset
-
-            self.look_timer = 0.0
-            self.next_look = random.uniform(0.8, 1.5)
+        self._update_random_look(dt, [-20, 0, 20], 2.0, 4.0)
 
     def _update_processing_look(self, dt):
-        self.look_timer += dt
-
-        if self.look_timer >= self.next_look:
-            if self.current_look <= 0:
-                look_offset = 30
-            else:
-                look_offset = -30
-
-            self.look(look_offset)
-            self.current_look = look_offset
-
-            self.look_timer = 0.0
-            self.next_look = random.uniform(0.6, 1.0)
+        self._update_random_look(dt, [-30, 0, 30], 1.5, 3.0)
 
     def _update_speaking_look(self, dt):
-        self.look_timer += dt
-
-        if self.look_timer >= self.next_look:
-            look_offset = random.choice([-15, 0, 15])
-
-            self.look(look_offset)
-            self.current_look = look_offset
-
-            self.look_timer = 0.0
-            self.next_look = random.uniform(1.0, 2.0)
+        self._update_random_look(dt, [-15, 0, 15], 2.5, 5.0)
 
     def _update_eye_positions(self, dt):
         difference = self.target_look_offset_x - self.look_offset_x

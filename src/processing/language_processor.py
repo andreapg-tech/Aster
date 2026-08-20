@@ -106,6 +106,11 @@ class LanguageProcessor:
                 No abuses de estas expresiones y evita repetir exactamente
                 la misma respuesta en conversaciones consecutivas.
 
+                - Si el usuario responde a una pregunta de Aster (ej: "bien", "todo bien",
+                  "mal", "regular", "sí", "no"), clasifícalo como "conversation".
+                - Si el usuario le pide a Aster que elija un tema, que le cuentealgo curioso,
+                  un chiste o que hable de lo que quiera, clasifícalo como "conversation".
+
                 --------------------------------
                 ELECCIÓN DE TEMA
                 --------------------------------

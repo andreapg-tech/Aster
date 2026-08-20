@@ -129,5 +129,5 @@ class VoiceInput:
 
         self.voice_threshold = max(noise_level * 2.5, 0.003)
 
-        print(f"Nivel de ruido: {noise_level:.4f}")
-        print(f"Umbral de voz: {self.voice_threshold:.4f}")
+        #print(f"Nivel de ruido: {noise_level:.4f}")
+        #print(f"Umbral de voz: {self.voice_threshold:.4f}")

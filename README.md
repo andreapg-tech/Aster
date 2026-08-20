@@ -1,50 +1,54 @@
 # Aster ⭐
 
-Aster es un asistente virtual interactivo desarrollado en Python.
+<p align="left">
+  <b>English</b> | <a href="README.es.md">Leer en Español 🇪🇸</a>
+</p>
 
-El proyecto combina una interfaz animada, interacción por voz, procesamiento de lenguaje y síntesis de voz para crear un personaje interactivo capaz de escuchar, procesar y responder al usuario.
+Aster is an interactive virtual assistant developed in Python.
 
-## ✨ Características
+The project combines an animated interface, voice interaction, local language processing, and speech synthesis to create an interactive character capable of listening, processing, and responding to the user.
 
-- 🎭 Personaje animado mediante Pygame.
-- 👀 Parpadeos y movimientos de mirada.
-- 😴 Estados de sueño y despertar.
-- 🎙️ Interacción mediante voz.
-- 🧠 Procesamiento de intenciones.
-- 🔊 Respuestas mediante síntesis de voz.
-- 💬 Modo de conversación.
-- 🔄 Máquina de estados para controlar el comportamiento del personaje.
-- ⏱️ Gestión automática del estado de inactividad.
+## ✨ Features
 
-## 🧠 Arquitectura
+- 🎭 Animated character using Pygame-ce.
+- 👀 Blinking and gaze movements.
+- 😴 Sleeping and waking states.
+- 🎙️ Voice-controlled interaction.
+- 🧠 Local intent processing.
+- 🔊 Speech synthesis (TTS) responses.
+- 💬 Continuous conversation mode.
+- 🔄 State machine to control character behavior.
+- ⏱️ Automatic inactivity management.
 
-Aster está organizado en diferentes componentes para separar la lógica del personaje, la interfaz, la entrada de voz, el procesamiento y los servicios.
+## 🧠 Architecture
+
+Aster is structured into modular components to separate the character logic, visual interface, audio capturing, processing, and external services.
 
 ```text
 src/
-├── actions/       # Acciones que Aster puede ejecutar
-├── aster/         # Lógica principal del personaje
-├── config/        # Configuración del proyecto
-├── core/          # Componentes centrales
-├── events/        # Eventos del sistema
-├── input/         # Entrada y reconocimiento de voz
-├── processing/    # Procesamiento del lenguaje 
-|                    e intenciones
-├── render/        # Renderizado y animaciones
-├── services/      # Servicios utilizados por
-|                    la aplicación
-├── states/        # Estados de Aster y sus ojos
-├── ui/            # Ventana e interfaz
-└── main.py        # Punto de entrada
+├── actions/       # Actions Aster can execute
+├── aster/         # Core character logic
+├── config/        # Project settings and configurations
+├── core/          # App orchestration and event loop
+├── events/        # System events definitions
+├── input/         # Audio capture and speech recognition
+├── processing/    # Language processing and
+                     intent classification
+├── render/        # Eye rendering and animations
+├── services/      # Geolocation, weather, and
+                     TTS services
+├── states/        # State definitions (Aster and Eyes)
+├── ui/            # Pygame window setup
+└── main.py        # Entry point
 ```
 
-## 🔄 Máquina de estados
+## 🔄 State Machine
 
-El comportamiento de Aster se controla mediante una máquina de estados.
+Aster's behavior is controlled by a state machine.
 
 ```text
                     ┌───────────┐
-                    │ SLEEPING  │
+                    │  SLEEPING │
                     └─────┬─────┘
                           │
                        Wake Up
@@ -73,116 +77,123 @@ El comportamiento de Aster se controla mediante una máquina de estados.
                           │                     │
                           ▼                     │
                     ┌───────────┐               │
-                    │ SPEAKING  │───────────────┘
+                    │  SPEAKING │───────────────┘
                     └───────────┘
                           │
                           │ Inactivity
                           ▼
                     ┌───────────┐
-                    │ SLEEPING  │
+                    │  SLEEPING │
                     └───────────┘
 ```
 
-Cada estado controla el comportamiento y las animaciones que muestra el personaje.
+Each state controls the character's behavior and the animations displayed on the screen.
 
-## 🛠️ Tecnologías
+## 🛠️ Technologies
 
-- **Python** — lenguaje principal del proyecto.
-- **Pygame-ce** — renderizado de la interfaz y animaciones.
-- **SoundDevice** — captura de audio mediante el micrófono.
-- **SpeechRecognition** — gestión de la entrada de voz.
-- **Faster-Whisper** — transcripción de voz a texto.
-- **Piper TTS** — síntesis de voz.
-- **Ollama** — procesamiento de lenguaje mediante modelos locales.
-- **Git / GitHub** — control de versiones y gestión del proyecto.
+- **Python** — Core language.
+- **Pygame-ce** — Interface rendering and animations.
+- **SoundDevice** — Live microphone audio capture.
+- **SpeechRecognition** — Audio stream helper.
+- **Faster-Whisper** — Local, fast speech-to-text transcription.
+- **Piper TTS** — Local, fast text-to-speech synthesis.
+- **Ollama** — Local LLM integration (using `qwen2.5:3b`).
+- **Git / GitHub** — Version control.
 
-## 🚀 Instalación
+## 🚀 Installation
 
-### 1. Clonar el repositorio
-
+### 1. Clone the repository
 ```bash
 git clone https://github.com/andreapg-tech/Aster.git
 cd Aster
 ```
 
-### 2. Crear un entorno virtual
-
-En Windows:
-
+### 2. Create a virtual environment
+On Windows:
 ```bash
 py -m venv .venv
 ```
 
-### 3. Activar el entorno virtual
-
+### 3. Activate the virtual environment
 ```bash
 .venv\Scripts\activate
 ```
 
-### 4. Instalar las dependencias
-
+### 4. Install dependencies
 ```bash
 py -m pip install -r requirements.txt
 ```
 
-## ▶️ Ejecución
+### 5. Configure Ollama
+Ensure you have [Ollama](https://ollama.com/) installed and running. Then, pull the required local LLM:
+```bash
+ollama run qwen2.5:3b
+```
 
-Con el entorno virtual activado:
+### 6. Download the Piper voice model
+Create a directory named `models/piper/` in the root of the project. Download both the voice model and its JSON configuration, and save them in that folder:
+- [es_ES-davefx-medium.onnx](https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx)
+- [es_ES-davefx-medium.onnx.json](https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx.json)
 
+*Make sure the files are named exactly `es_ES-davefx-medium.onnx` and `es_ES-davefx-medium.onnx.json` inside `models/piper/`.*
+
+## ▶️ Execution
+
+With the virtual environment activated:
 ```bash
 py src/main.py
 ```
 
-Aster iniciará en estado de sueño y podrá despertarse mediante la interacción por voz.
+Aster will start in a sleeping state and will wake up when it hears the wake word.
 
-## 🎙️ Interacción
+## 🎙️ Interaction
 
-El flujo principal de interacción es:
+The main interaction flow is:
 
 ```text
-Aster dormido
+Aster is sleeping
       │
       ▼
-Reconocimiento de la palabra de activación
+Activation word recognition ("Aster")
       │
       ▼
-Despertar
+Wake up (Animation)
       │
       ▼
-Escuchar
+Listen to user input
       │
       ▼
-Procesar la entrada
+Process input with Ollama
       │
       ▼
-Responder mediante voz
+Respond using voice (Piper TTS)
       │
       ▼
-Continuar la conversación
+Continue conversation
       │
       ▼
-Inactividad
+Inactivity Timeout
       │
       ▼
-Volver a dormir
+Go back to sleep
 ```
 
-## 🎨 Estados visuales
+## 🎨 Visual States
 
-Aster cuenta actualmente con diferentes estados para representar su comportamiento:
+Aster currently has different states to represent its behavior:
 
-| Estado | Descripción |
+| State | Description |
 |---|---|
-| `SLEEPING` | Aster está dormido con los ojos cerrados. |
-| `WAKE_UP` | Aster se despierta progresivamente. |
-| `IDLE` | Estado de espera, con parpadeos y movimientos de mirada. |
-| `LISTENING` | Aster está escuchando al usuario. |
-| `PROCESSING` | Aster está procesando la entrada recibida. |
-| `SPEAKING` | Aster está generando una respuesta hablada. |
+| `SLEEPING` | Aster is sleeping with its eyes closed. |
+| `WAKE_UP` | Aster opens its eyes progressively. |
+| `IDLE` | Default waiting state with random blinking and looking around. |
+| `LISTENING` | Aster is actively listening to the user. |
+| `PROCESSING` | Aster is processing the input. |
+| `SPEAKING` | Aster is generating a spoken response. |
 
-## 📁 Organización del proyecto
+## 📁 Project Organization
 
-El proyecto utiliza una arquitectura modular para separar responsabilidades.
+The project uses a modular architecture to separate responsibilities.
 
 ```text
 Aster/
@@ -206,32 +217,32 @@ Aster/
 └── requirements.txt
 ```
 
-## 🔮 Próximas mejoras
+## 🔮 Future Enhancements
 
-Algunas posibles líneas de evolución del proyecto son:
+Some possible paths for the project's evolution are:
 
-- 🧠 Sistema de memoria.
-- 🎭 Mayor variedad de expresiones y animaciones.
-- 💡 Nuevas acciones e integraciones.
-- 🤖 Personalidad más desarrollada.
-- 🖥️ Mejoras de la interfaz.
-- 🔌 Migración del prototipo a hardware.
+- 🧠 Long-term memory system.
+- 🎭 Greater variety of eye expressions and animations.
+- 💡 More actions and API integrations.
+- 🤖 Developed conversational personality.
+- 🖥️ UI refinements.
+- 🔌 Hardware porting (running Aster on a physical screen/Raspberry Pi).
 
-## 🎯 Objetivo del proyecto
+## 🎯 Project Goal
 
-Aster comenzó como un proyecto personal para explorar el desarrollo de un personaje interactivo y combinar diferentes áreas del desarrollo de software.
+Aster started as a personal project to explore the development of an interactive character and combine different areas of software development.
 
-El proyecto permite trabajar con:
+The project allows working with:
 
-- Programación en Python.
-- Arquitectura modular.
-- Máquinas de estados.
-- Procesamiento de voz.
-- Procesamiento de lenguaje.
-- Síntesis de voz.
-- Animación e interfaces.
-- Integración de diferentes componentes.
+- Python programming.
+- Modular architecture.
+- State machines.
+- Speech processing.
+- Language processing.
+- Speech synthesis.
+- Animations and interfaces.
+- Component integration.
 
-## 👤 Autor
+## 👤 Author
 
-Proyecto personal desarrollado como parte de mi aprendizaje y portfolio de Ingeniería Informática.
+Personal project built as part of my learning journey and portfolio for Computer Engineering.
