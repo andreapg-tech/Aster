@@ -141,8 +141,15 @@ class AsterApp:
 
         #Save history
         if result:
+            import json
+            structured_response = json.dumps({
+                "intent": intent.name,
+                "parameters": {
+                    "response": result
+                }
+            }, ensure_ascii=False)
             self.language_processor.add_to_history("user", text)
-            self.language_processor.add_to_history("assistant", result)
+            self.language_processor.add_to_history("assistant", structured_response)
         
         self.event_queue.put({
             "type": "PROCESSING_FINISHED",

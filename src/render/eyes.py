@@ -130,7 +130,7 @@ class Eyes:
         self._update_random_look(dt, [-20, 0, 20], 2.0, 4.0)
 
     def _update_processing_look(self, dt):
-        self._update_random_look(dt, [-30, 0, 30], 1.5, 3.0)
+        self._update_random_look(dt, [-30, 0, 30], 3.0, 8.0)
 
     def _update_speaking_look(self, dt):
         self._update_random_look(dt, [-15, 0, 15], 2.5, 5.0)
