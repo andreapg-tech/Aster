@@ -152,4 +152,4 @@ Aster empezó como un proyecto personal para combinar varias áreas del desarrol
 
 ## 👤 Autora
 
-**Andrea Pérez González** · [LinkedIn](https://www.linkedin.com/in/andreap%C3%A9rezgonz%C3%A1lez) · [GitHub](https://github.com/andreapg-tech)
+**Andrea Pérez González** · [LinkedIn](https://www.linkedin.com/in/andreap%C3%A9rezgonz%C3%A1lez)

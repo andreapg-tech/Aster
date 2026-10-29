@@ -154,4 +154,4 @@ Aster started as a personal project to bring together several areas of software 
 
 ## 👤 Author
 
-**Andrea Pérez González** · [LinkedIn](https://www.linkedin.com/in/andreap%C3%A9rezgonz%C3%A1lez) · [GitHub](https://github.com/andreapg-tech)
+**Andrea Pérez González** · [LinkedIn](https://www.linkedin.com/in/andreap%C3%A9rezgonz%C3%A1lez)
