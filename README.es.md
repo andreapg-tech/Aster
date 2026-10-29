@@ -6,8 +6,9 @@
 
 **Asistente de voz con personaje animado y modelos de IA locales.** Aster escucha, entiende y responde hablando. La transcripción, el LLM y la síntesis de voz se ejecutan en tu equipo, así que tu voz y tus conversaciones no salen de él; solo se conecta a internet para consultar el tiempo.
 
-<!-- Cuando tengas el GIF, guárdalo en docs/demo.gif y quita los comentarios de la línea de abajo -->
-<!-- ![Aster en acción](docs/demo.gif) -->
+<p align="center">
+  <img src="docs/demo.gif" alt="Aster se despierta, mira a su alrededor, parpadea y vuelve a dormirse" width="480">
+</p>
 
 ## ✨ Características
 

@@ -6,8 +6,9 @@
 
 **A voice assistant with an animated character and local AI models.** Aster listens, understands and talks back. Speech recognition, the LLM and speech synthesis all run on your own machine, so your voice and conversations never leave it; it only goes online to check the weather.
 
-<!-- Once you have the GIF, save it as docs/demo.gif and uncomment the line below -->
-<!-- ![Aster in action](docs/demo.gif) -->
+<p align="center">
+  <img src="docs/demo.gif" alt="Aster waking up, looking around, blinking and falling asleep again" width="480">
+</p>
 
 ## ✨ Features
 
