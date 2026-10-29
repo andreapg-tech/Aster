@@ -4,245 +4,152 @@
   <a href="README.md">Read in English 🇬🇧</a> | <b>Español</b>
 </p>
 
-Aster es un asistente virtual interactivo desarrollado en Python.
+**Asistente de voz con personaje animado y modelos de IA locales.** Aster escucha, entiende y responde hablando. La transcripción, el LLM y la síntesis de voz se ejecutan en tu equipo, así que tu voz y tus conversaciones no salen de él; solo se conecta a internet para consultar el tiempo.
 
-El proyecto combina una interfaz animada, interacción por voz, procesamiento de lenguaje y síntesis de voz para crear un personaje interactivo capaz de escuchar, procesar y responder al usuario.
+<!-- Cuando tengas el GIF, guárdalo en docs/demo.gif y quita los comentarios de la línea de abajo -->
+<!-- ![Aster en acción](docs/demo.gif) -->
 
 ## ✨ Características
 
-- 🎭 Personaje animado mediante Pygame-ce.
-- 👀 Parpadeos y movimientos de mirada.
-- 😴 Estados de sueño y despertar.
-- 🎙️ Interacción mediante voz.
-- 🧠 Procesamiento de intenciones.
-- 🔊 Respuestas mediante síntesis de voz.
-- 💬 Modo de conversación.
-- 🔄 Máquina de estados para controlar el comportamiento del personaje.
-- ⏱️ Gestión automática del estado de inactividad.
-
-## 🧠 Arquitectura
-
-Aster está organizado en diferentes componentes para separar la lógica del personaje, la interfaz, la entrada de voz, el procesamiento y los servicios.
-
-```text
-src/
-├── actions/       # Acciones que Aster puede ejecutar
-├── aster/         # Lógica principal del personaje
-├── config/        # Configuración del proyecto
-├── core/          # Componentes centrales
-├── events/        # Eventos del sistema
-├── input/         # Entrada y reconocimiento de voz
-├── processing/    # Procesamiento del lenguaje 
-|                    e intenciones
-├── render/        # Renderizado y animaciones
-├── services/      # Servicios utilizados por
-|                    la aplicación
-├── states/        # Estados de Aster y sus ojos
-├── ui/            # Ventana e interfaz
-└── main.py        # Punto de entrada
-```
-
-## 🔄 Máquina de estados
-
-El comportamiento de Aster se controla mediante una máquina de estados.
-
-```text
-                    ┌───────────┐
-                    │  SLEEPING │
-                    └─────┬─────┘
-                          │
-                       Wake Up
-                          │
-                          ▼
-                    ┌───────────┐
-                    │  WAKE_UP  │
-                    └─────┬─────┘
-                          │
-                          ▼
-                    ┌───────────┐
-                    │   IDLE    │◄──────────────┐
-                    └─────┬─────┘               │
-                          │                     │
-                    Wake / Voice                │
-                          │                     │
-                          ▼                     │
-                    ┌───────────┐               │
-                    │ LISTENING │               │
-                    └─────┬─────┘               │
-                          │                     │
-                          ▼                     │
-                    ┌───────────┐               │
-                    │PROCESSING │               │
-                    └─────┬─────┘               │
-                          │                     │
-                          ▼                     │
-                    ┌───────────┐               │
-                    │  SPEAKING │───────────────┘
-                    └───────────┘
-                          │
-                          │ Inactivity
-                          ▼
-                    ┌───────────┐
-                    │  SLEEPING │
-                    └───────────┘
-```
-
-Cada estado controla el comportamiento y las animaciones que muestra el personaje.
+- 🎙️ **Conversación por voz** con palabra de activación ("Aster").
+- 🧠 **LLM local** con Ollama (`qwen2.5:3b`): sin API keys y sin enviar tus conversaciones a la nube.
+- 🎯 **Detección de intenciones** con el LLM: conversar, decir la hora o la fecha y consultar el tiempo.
+- 🌦️ **Consulta del tiempo** de cualquier ciudad con la API de [Open-Meteo](https://open-meteo.com) (sin API key).
+- 📝 **Transcripción** con Faster-Whisper (modelo `small` en CPU) y **síntesis de voz** con Piper TTS.
+- 🔄 **Máquina de estados** que controla el comportamiento y las animaciones.
+- 🎭 **Personaje animado** con Pygame-ce: parpadeos, movimientos de mirada, dormir y despertar.
+- ⏱️ **Gestión de inactividad**: vuelve a dormirse automáticamente.
 
 ## 🛠️ Tecnologías
 
-- **Python** — lenguaje principal del proyecto.
-- **Pygame-ce** — renderizado de la interfaz y animaciones.
-- **SoundDevice** — captura de audio mediante el micrófono.
-- **SpeechRecognition** — gestión de la entrada de voz.
-- **Faster-Whisper** — transcripción de voz a texto.
-- **Piper TTS** — síntesis de voz.
-- **Ollama** — procesamiento de lenguaje mediante modelos locales.
-- **Git / GitHub** — control de versiones y gestión del proyecto.
+| Componente | Tecnología |
+|---|---|
+| Lenguaje | Python |
+| Interfaz y animación | Pygame-ce |
+| Captura de audio | SoundDevice |
+| Voz a texto | Faster-Whisper |
+| LLM | Ollama (modelos locales) |
+| Texto a voz | Piper TTS |
+| Tiempo y geolocalización | API de Open-Meteo |
+
+## 🔄 Máquina de estados
+
+```
+SLEEPING ──(palabra de activación)──► WAKE_UP ──► IDLE
+                                                   │
+             ┌─────────────────────────────────────┘
+             ▼
+         LISTENING ──► PROCESSING ──► SPEAKING ──► IDLE
+                                                   │
+                                          (inactividad)
+                                                   ▼
+                                               SLEEPING
+```
+
+| Estado | Descripción |
+|---|---|
+| `SLEEPING` | Dormido, con los ojos cerrados. |
+| `WAKE_UP` | Se despierta poco a poco. |
+| `IDLE` | En espera, con parpadeos y movimientos de mirada. |
+| `LISTENING` | Escuchando al usuario. |
+| `PROCESSING` | Procesando la entrada con el LLM. |
+| `SPEAKING` | Respondiendo por voz. |
+
+## 🧠 Arquitectura
+
+El proyecto separa responsabilidades en módulos independientes:
+
+```
+src/
+├── actions/      # Acciones que Aster puede ejecutar
+├── aster/        # Lógica principal del personaje
+├── config/       # Configuración
+├── core/         # Componentes centrales
+├── events/       # Eventos del sistema
+├── input/        # Captura y reconocimiento de voz
+├── processing/   # Procesamiento del lenguaje e intenciones
+├── render/       # Renderizado y animaciones
+├── services/     # Servicios (síntesis de voz, tiempo, geolocalización)
+├── states/       # Estados de Aster y de sus ojos
+├── ui/           # Ventana e interfaz
+└── main.py       # Punto de entrada
+```
+
+## 📋 Requisitos
+
+- Python 3.11 o superior
+- [Ollama](https://ollama.com) instalado y en ejecución
+- Micrófono y altavoces
+- Unos 4 GB de RAM libres para los modelos locales (orientativo)
+- Conexión a internet solo para consultar el tiempo
 
 ## 🚀 Instalación
 
-### 1. Clonar el repositorio
+**1. Clona el repositorio**
 ```bash
 git clone https://github.com/andreapg-tech/Aster.git
 cd Aster
 ```
 
-### 2. Crear un entorno virtual
-En Windows:
+**2. Crea y activa un entorno virtual**
+
+Windows:
 ```bash
 py -m venv .venv
-```
-
-### 3. Activar el entorno virtual
-```bash
 .venv\Scripts\activate
 ```
 
-### 4. Instalar las dependencias
+Linux / macOS:
 ```bash
-py -m pip install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-### 5. Configurar Ollama
-Asegúrate de tener [Ollama](https://ollama.com/) instalado y ejecutándose. Luego descarga el LLM local con:
+**3. Instala las dependencias**
 ```bash
-ollama run qwen2.5:3b
+pip install -r requirements.txt
 ```
 
-### 6. Descargar el modelo de voz de Piper
-Crea una carpeta llamada `models/piper/` en la raíz del proyecto. Descarga tanto el modelo de voz como su archivo JSON de configuración y guárdalos dentro de dicha carpeta:
-- [es_ES-davefx-medium.onnx](https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx)
-- [es_ES-davefx-medium.onnx.json](https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx.json)
-
-*Asegúrate de que se llamen exactamente `es_ES-davefx-medium.onnx` y `es_ES-davefx-medium.onnx.json`.*
-
-## ▶️ Ejecución
-
-Con el entorno virtual activado:
+**4. Descarga el modelo de lenguaje**
 ```bash
-py src/main.py
+ollama pull qwen2.5:3b
 ```
 
-Aster iniciará en estado de sueño y podrá despertarse mediante la interacción por voz.
+**5. Descarga la voz de Piper**
 
-## 🎙️ Interacción
+Descarga `es_ES-davefx-medium.onnx` y `es_ES-davefx-medium.onnx.json` desde [piper-voices](https://huggingface.co/rhasspy/piper-voices/tree/main/es/es_ES/davefx/medium). Guárdalos en `models/piper/`, en la raíz del proyecto, sin cambiarles el nombre.
 
-El flujo principal de interacción es:
+## ▶️ Uso
 
-```text
-Aster dormido
-      │
-      ▼
-Reconocimiento de la palabra de activación
-      │
-      ▼
-Despertar
-      │
-      ▼
-Escuchar
-      │
-      ▼
-Procesar la entrada
-      │
-      ▼
-Responder mediante voz
-      │
-      ▼
-Continuar la conversación
-      │
-      ▼
-Inactividad
-      │
-      ▼
-Volver a dormir
+```bash
+python src/main.py
 ```
 
-## 🎨 Estados visuales
+Aster empieza dormido. Di **"Aster"** (por ejemplo, "Hola, Aster") para despertarlo y empezar a hablar con él. Si no hay actividad durante un rato, vuelve a dormirse.
 
-Aster cuenta actualmente con diferentes estados para representar su comportamiento:
+Algunas cosas que puedes pedirle:
 
-| Estado | Descripción |
-|---|---|
-| `SLEEPING` | Aster está dormido con los ojos cerrados. |
-| `WAKE_UP` | Aster se despierta progresivamente. |
-| `IDLE` | Estado de espera, con parpadeos y movimientos de mirada. |
-| `LISTENING` | Aster está escuchando al usuario. |
-| `PROCESSING` | Aster está procesando la entrada recibida. |
-| `SPEAKING` | Aster está generando una respuesta hablada. |
-
-## 📁 Organización del proyecto
-
-El proyecto utiliza una arquitectura modular para separar responsabilidades.
-
-```text
-Aster/
-│
-├── src/
-│   ├── actions/
-│   ├── aster/
-│   ├── config/
-│   ├── core/
-│   ├── events/
-│   ├── input/
-│   ├── processing/
-│   ├── render/
-│   ├── services/
-│   ├── states/
-│   ├── ui/
-│   └── main.py
-│
-├── .gitignore
-├── README.md
-└── requirements.txt
-```
+- "¿Qué hora es?"
+- "¿Qué día es hoy?"
+- "¿Qué tiempo hará mañana en Madrid?"
+- O simplemente charlar con él.
 
 ## 🔮 Próximas mejoras
 
-Algunas posibles líneas de evolución del proyecto son:
+- [ ] Sistema de memoria entre conversaciones
+- [ ] Más expresiones y animaciones
+- [ ] Nuevas acciones e integraciones
+- [ ] Personalidad más desarrollada
+- [ ] Migración del prototipo a hardware
 
-- 🧠 Sistema de memoria.
-- 🎭 Mayor variedad de expresiones y animaciones.
-- 💡 Nuevas acciones e integraciones.
-- 🤖 Personalidad más desarrollada.
-- 🖥️ Mejoras de la interfaz.
-- 🔌 Migración del prototipo a hardware.
+## 💡 Qué he aprendido
 
-## 🎯 Objetivo del proyecto
+Aster empezó como un proyecto personal para combinar varias áreas del desarrollo de software. Con él he trabajado:
 
-Aster comenzó como un proyecto personal para explorar el desarrollo de un personaje interactivo y combinar diferentes áreas del desarrollo de software.
+- El diseño de una **arquitectura modular** y de una **máquina de estados**.
+- La integración de un **pipeline de voz completo** (STT → LLM → TTS) con modelos locales.
+- La coordinación entre la **interfaz animada** y el procesamiento de audio.
 
-El proyecto permite trabajar con:
+## 👤 Autora
 
-- Programación en Python.
-- Arquitectura modular.
-- Máquinas de estados.
-- Procesamiento de voz.
-- Procesamiento de lenguaje.
-- Síntesis de voz.
-- Animación e interfaces.
-- Integración de diferentes componentes.
-
-## 👤 Autor
-
-Proyecto personal desarrollado como parte de mi aprendizaje y portfolio de Ingeniería Informática.
+**Andrea Pérez González** · [LinkedIn](https://www.linkedin.com/in/andreap%C3%A9rezgonz%C3%A1lez) · [GitHub](https://github.com/andreapg-tech)
